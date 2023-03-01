@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -13,8 +14,13 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte("Hello This is the home"))
 }
-func view(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Display the snippet"))
+func snippetView(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	fmt.Fprintf(w, "Display a specific id %d", id)
 }
 func create(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -28,7 +34,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snippet/view", view)
+	mux.HandleFunc("/snippet/view", snippetView)
 	mux.HandleFunc("/snippet/create", create)
 	fmt.Println("Server Starting on port 4000")
 	err := http.ListenAndServe(":4000", mux)
