@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/AH-mahmoodnia/snippetbox/internal/models"
 	_ "github.com/lib/pq"
 )
 
@@ -20,6 +21,7 @@ type application struct {
 	infoLog  *log.Logger
 	errorLog *log.Logger
 	cfg      config
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -30,7 +32,8 @@ func main() {
 
 	flag.StringVar(&app.cfg.addr, "addr", ":4000", "HTTP network adderss")
 	flag.StringVar(&app.cfg.staticDir, "static-dir", "./ui/static", "Path to static assets")
-	flag.StringVar(&app.cfg.dsn, "dsn", "postgres://web:123@localhost/snippetbox?sslmode=disable", "Postgresql data source name")
+	dsn := "postgres://web:123@localhost/snippetbox?sslmode=disable"
+	flag.StringVar(&app.cfg.dsn, "dsn", dsn, "Postgresql data source name")
 	flag.Parse()
 
 	db, err := app.openDB()
@@ -38,6 +41,7 @@ func main() {
 		app.errorLog.Fatal(err)
 	}
 	defer db.Close()
+	app.snippets = &models.SnippetModel{DB: db}
 
 	srv := &http.Server{
 		Addr:     app.cfg.addr,
