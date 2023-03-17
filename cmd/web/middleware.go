@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func secureHeader(next http.Handler) http.Handler {
+func secureHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Security-Policy",
 			"default-src 'self'; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com")
