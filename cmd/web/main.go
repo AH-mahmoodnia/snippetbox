@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/AH-mahmoodnia/snippetbox/internal/models"
+	"github.com/go-playground/form/v4"
 	_ "github.com/lib/pq"
 )
 
@@ -24,12 +25,14 @@ type application struct {
 	cfg           config
 	snippets      *models.SnippetModel
 	templateCache map[string]*template.Template
+	formDecoder   *form.Decoder
 }
 
 func main() {
 	app := &application{
-		infoLog:  log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),
-		errorLog: log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile),
+		infoLog:     log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),
+		errorLog:    log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Llongfile),
+		formDecoder: form.NewDecoder(),
 	}
 
 	flag.StringVar(&app.cfg.addr, "addr", ":4000", "HTTP network adderss")
