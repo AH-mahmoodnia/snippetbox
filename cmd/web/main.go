@@ -7,8 +7,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/AH-mahmoodnia/snippetbox/internal/models"
+	"github.com/alexedwards/scs/postgresstore"
+	"github.com/alexedwards/scs/v2"
 	"github.com/go-playground/form/v4"
 	_ "github.com/lib/pq"
 )
@@ -20,12 +23,13 @@ type config struct {
 }
 
 type application struct {
-	infoLog       *log.Logger
-	errorLog      *log.Logger
-	cfg           config
-	snippets      *models.SnippetModel
-	templateCache map[string]*template.Template
-	formDecoder   *form.Decoder
+	infoLog        *log.Logger
+	errorLog       *log.Logger
+	cfg            config
+	snippets       *models.SnippetModel
+	templateCache  map[string]*template.Template
+	formDecoder    *form.Decoder
+	sessionManager *scs.SessionManager
 }
 
 func main() {
@@ -53,6 +57,12 @@ func main() {
 		app.errorLog.Fatal(err)
 	}
 	app.templateCache = templateCache
+
+	sessionManager := scs.New()
+	sessionManager.Store = postgresstore.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+
+	app.sessionManager = sessionManager
 
 	srv := &http.Server{
 		Addr:     app.cfg.addr,
