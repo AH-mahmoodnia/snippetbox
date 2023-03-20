@@ -69,18 +69,6 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	/*
-		expires, err := strconv.Atoi(r.PostForm.Get("expires"))
-		if err != nil {
-			app.clientError(w, http.StatusBadRequest)
-			return
-		}
-		form := &snippetCreateForm{
-			Title:   r.PostForm.Get("title"),
-			Content: r.PostForm.Get("content"),
-			Expires: expires,
-		}
-	*/
 
 	var form snippetCreateForm
 
