@@ -64,15 +64,9 @@ type snippetCreateForm struct {
 }
 
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-
 	var form snippetCreateForm
 
-	if err := app.formDecoder.Decode(&form, r.PostForm); err != nil {
+	if err := app.decodePostForm(r, &form); err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
