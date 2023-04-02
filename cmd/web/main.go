@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"flag"
 	"html/template"
@@ -65,10 +66,15 @@ func main() {
 
 	app.sessionManager = sessionManager
 
+	tlsConfig := &tls.Config{
+		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+	}
+
 	srv := &http.Server{
-		Addr:     app.cfg.addr,
-		Handler:  app.routes(),
-		ErrorLog: app.errorLog,
+		Addr:      app.cfg.addr,
+		Handler:   app.routes(),
+		ErrorLog:  app.errorLog,
+		TLSConfig: tlsConfig,
 	}
 
 	app.infoLog.Printf("Starting server on %s", app.cfg.addr)
