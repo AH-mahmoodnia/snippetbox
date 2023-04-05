@@ -65,7 +65,6 @@ func main() {
 	sessionManager.Store = postgresstore.New(db)
 	sessionManager.Lifetime = 12 * time.Hour
 	sessionManager.Cookie.Secure = true
-
 	app.sessionManager = sessionManager
 
 	tlsConfig := &tls.Config{
