@@ -13,3 +13,5 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	golang.org/x/crypto v0.7.0
 )
+
+require github.com/justinas/nosurf v1.1.1
