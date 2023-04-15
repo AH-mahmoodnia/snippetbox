@@ -18,9 +18,9 @@ import (
 )
 
 type config struct {
-	addr      string
-	staticDir string
-	dsn       string
+	addr string
+	//staticDir string
+	dsn string
 }
 
 type application struct {
@@ -42,7 +42,7 @@ func main() {
 	}
 
 	flag.StringVar(&app.cfg.addr, "addr", ":4000", "HTTP network adderss")
-	flag.StringVar(&app.cfg.staticDir, "static-dir", "./ui/static", "Path to static assets")
+	//flag.StringVar(&app.cfg.staticDir, "static-dir", "./ui/static", "Path to static assets")
 	dsn := "postgres://web:123@localhost/snippetbox?sslmode=disable"
 	flag.StringVar(&app.cfg.dsn, "dsn", dsn, "Postgresql data source name")
 	flag.Parse()
